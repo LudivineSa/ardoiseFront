@@ -20,7 +20,7 @@ export async function main(token: string, email: string) {
   return new Promise((resolve, reject) => {
     transporter.sendMail({
     from: '"Tuesday" <tuesdayWildCodeSchool@gmail.com>', // sender address
-    to: email, // list of receivers
+    to: email, // list of receiver
     subject: "Récupération de mot de passe", // Subject line
     text: "Mot de passe oublié", // plain text body
     html: "<b>Mot de passe oublié?</b> " + token , // html body
