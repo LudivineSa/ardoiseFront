@@ -1,0 +1,44 @@
+type Query {
+  allUsers: [User!]!
+  getSingleUser(email: String!): User
+  authentificate(email: String!, password: String!): authentificateSuccess
+}
+
+type Mutation {
+  createUser(
+    name: String!
+    lastname: String!
+    email: String!
+    password: String!
+  ): successRegisteredUser!
+  changePassword(
+    email: String!
+    password: String!
+    newPassword: String!
+  ): String!
+  deleteUser(email: String!): User
+  updateUserName(name: String, lastname: String): User
+  updateUserMail(password: String, email: String): authentificateSuccess
+}
+
+type User {
+  name: String
+  lastname: String
+  email: String
+  password: String
+  id: Int
+}
+
+
+type authentificateSuccess {
+  email: String!
+  success: Boolean!
+  token: String
+}
+
+type successRegisteredUser {
+  name: String!
+  lastname: String!
+  email: String!
+  success: Boolean!
+}
