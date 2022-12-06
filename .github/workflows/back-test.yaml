@@ -3,6 +3,11 @@ name: back-tests-workflow
 on:
   pull_request
 
+on:
+  push:
+    branches:
+     - master
+
 jobs:
   test-back:
     runs-on: ubuntu-latest
