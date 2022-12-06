@@ -1,0 +1,82 @@
+services:
+  app:
+    # image: fizriwer/groopainfront
+    build: ./front
+    ports:
+      - "3000:3000"
+    volumes:
+      - web-client-build:/app/build
+    environment:
+      - NODE_ENV=production  
+    networks:
+      grape:
+  back: 
+    # image: fizriwer/groopainback
+    build: ./back
+    depends_on:
+      - db
+        # condition: service_healthy
+    ports:
+      - "4000:4000"
+    command: sh -c "npm run start:prisma && npm start"
+    expose:
+      - 4000
+    environment:
+      - NODE_ENV=production
+    extra_hosts:
+     - "host.docker.internal:host-gateway"
+    #  - "host.docker.internal:172.17.0.1"
+    networks:
+      grape:
+  nginx:
+    image: nginx:1.21.3
+    depends_on:
+      - app
+      - back
+    restart: always
+    ports:
+      - ${GATEWAY_PORT:-9000}:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - web-client-build:/web-client-build
+      - ./logs:/var/log/nginx
+      # - SERVER_PORT=5000
+    networks:
+      grape:
+  db:
+    image: postgres
+    restart: always
+    user: postgres 
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: ardoise
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d postgres -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    ports:
+      - 5434:5432
+    volumes:
+      - database-volume:/var/lib/postgresql/data
+    networks:
+      grape:
+      
+  adminer:
+    image: adminer
+    depends_on:
+      - db
+    restart: always
+    ports:
+      - 9002:8080
+    networks:
+      grape:
+
+volumes:
+  web-client-build:
+    driver: local
+  database-volume:
+    driver: local
+networks:
+  grape:
