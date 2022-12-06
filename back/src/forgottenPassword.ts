@@ -23,7 +23,7 @@ export async function main(token: string, email: string) {
     to: email, // list of receiver
     subject: "Récupération de mot de passe", // Subject line
     text: "Mot de passe oublié", // plain text body
-    html: "<b>Mot de passe oublié?</b> " + token , // html body
+    html: "<b>Mot de passe oublié?</b> " + token , // Le mail à écrire
   }, (err : any, data : any) => {
     if (err) {
       reject(false);
